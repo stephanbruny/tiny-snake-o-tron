@@ -17,8 +17,8 @@ Type `/Applications/love.app/Contents/MacOS/love .`
 
 ### On Linux
 
-Same as on Mac but the command may look like `love .` when installed properly.
-** Make sure you have the latest version of LÖVE2D. Some package managers may include older versions which will not work **
+Same as on Mac but the command may look like `love .` when installed properly.  
+**Make sure you have the latest version of LÖVE2D. Some package managers may include older versions which will not work**
 
 ### On Windows
 
