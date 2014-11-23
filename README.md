@@ -19,7 +19,7 @@ Type `/Applications/love.app/Contents/MacOS/love .`
 
 Same as on Mac but the command may look like `love .` when installed properly.  
 
-_Make sure you have the latest version of LÖVE2D. Some package managers may include older versions which will not work_
+__Make sure you have the latest version of LÖVE2D. Some package managers may include older versions which will not work__
 
 ### On Windows
 
