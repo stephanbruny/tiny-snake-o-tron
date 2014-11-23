@@ -307,6 +307,11 @@ function updateEnemy(sn, pointList)
       return table.remove(sn, #sn);
     else
       sn[1].dead = false;
+      iterateSnakeTail(data.snake, function(i, e) 
+        if sn[1].x == e.x and sn[1].y == e.y then
+          sn[1].dead = true;
+        end
+      end);
     end
   end
 
