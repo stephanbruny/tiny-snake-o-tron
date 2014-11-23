@@ -25,7 +25,7 @@ end
 function scene.draw()
   r, g, b = love.graphics.getColor();
   love.graphics.setColor(textColor.r, textColor.g, textColor.b);
-  love.graphics.printf("Franz Joy Games",0, data.screenH / 2 - 14, data.screenW,"center") -- center your text around x = 200/2 + 100 = 200
+  love.graphics.printf("Franz Joy Games",0, data.screenH / 2 - 14, data.screenW,"center")
   love.graphics.setColor(r, g, b);
 end
 

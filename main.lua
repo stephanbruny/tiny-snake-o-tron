@@ -43,7 +43,7 @@ function love.draw()
 
     return love.graphics.draw(sceneCanvas, 0, 0, 0, data.screenW / sceneW,  data.screenH / sceneH);
   end
-  love.graphics.printf("No scene loaded",0, data.screenH / 2 - 14, data.screenW,"center") -- center your text around x = 200/2 + 100 = 200
+  love.graphics.printf("No scene loaded",0, data.screenH / 2 - 14, data.screenW,"center")
 end
 
 function love.update()
