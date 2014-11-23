@@ -32,3 +32,9 @@ Hitting 'P' will pause the game.
 After you died you can replay the game after hitting escape.  
 
 Eat dots, grow longer and don't rush into your enemy or yourself.
+
+## Credits
+
+Sound effects by Damaged Panda (CC-BY 3.0): http://opengameart.org/users/damaged-panda
+
+Music by SketchyLogic (CC-BY 3.0): http://opengameart.org/users/sketchylogic
