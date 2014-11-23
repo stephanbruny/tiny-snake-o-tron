@@ -8,6 +8,14 @@ So there it is.
 
 - Latest version of LÖVE2D (www.love2d.org)
 
+## System requirements
+
+_not tested_
+
+- Dual Core x86 CPU > 1 GHz
+- a gaphics card capapable of rendering offscreen targets
+- 256 MB RAM should be sufficient
+
 ## Run the game
 
 ### On Mac
