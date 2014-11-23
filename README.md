@@ -38,3 +38,5 @@ Eat dots, grow longer and don't rush into your enemy or yourself.
 Sound effects by Damaged Panda (CC-BY 3.0): http://opengameart.org/users/damaged-panda
 
 Music by SketchyLogic (CC-BY 3.0): http://opengameart.org/users/sketchylogic
+
+Programming by Stephan Bruny. Licensed under MIT - License (see LICENSE)
