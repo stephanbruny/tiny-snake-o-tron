@@ -89,11 +89,17 @@ function scene.load(exit)
   data.snake = {};
   data.enemy = {};
   score = 0;
-  
+
   makeSnakeHead(data.snake);
   makeEnemySnakeHead(data.enemy);
   
-  audio.load("game-music", "music/HappyLevel.wav")
+  local gameMusic = "music/HappyLevel.wav";
+
+  if data.speed == data.difficulty.normal then gameMusic = "music/SwingingLevel.wav" end
+  if data.speed == data.difficulty.fast then gameMusic = "music/FranticLevel.wav" end
+  if data.speed == data.difficulty.extreme then gameMusic = "music/8BitMetal.wav" end
+
+  audio.load("game-music", gameMusic)
   audio.load("sfx-die", "music/sfx/die.wav")
   audio.load("sfx-coin", "music/sfx/coin.wav")
 

@@ -7,7 +7,7 @@ require "slam"
 function findAudio(name)
   for k,v in pairs(sources) do
     if v.name == name then
-      return v;
+      return k, v;
     end
   end
   return nil;
@@ -20,19 +20,18 @@ function audio.load(name, file)
     source = love.audio.newSource(file, "static")
   };
 
-  local oldSource = findAudio(name);
+  local index, oldSource = findAudio(name);
 
   if (oldSource) then 
-    oldSource = newSource;
-  else
-    table.insert(sources, newSource);
+    table.remove(sources, index);
   end
+  table.insert(sources, newSource);  
 end
 
 function audio.play(name, loop, volume)
   loop = loop or false;
   volume = volume or 1.0;
-  local source = findAudio(name);
+  local _, source = findAudio(name);
   if (source) then 
     source.source:setLooping(loop);
     source.source:setVolume(volume);
