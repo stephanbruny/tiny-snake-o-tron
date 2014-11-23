@@ -5,6 +5,9 @@ local gameScene = require "game-scene"
 
 local currentScene = nil;
 
+local sceneW, sceneH = data.screenW, data.screenH;
+local sceneCanvas = love.graphics.newCanvas(sceneW, sceneH);
+
 function loadSplashScene()
   splashScene.load(function()
     loadScene(gameScene, exitGameScene);
@@ -13,6 +16,7 @@ function loadSplashScene()
 end
 
 function love.load()
+  love.window.setMode(data.screenW, data.screenH)
   love.graphics.setFont(data.gameFont);
   love.window.setTitle("Snake-O-Tron");
   loadSplashScene()
@@ -29,21 +33,20 @@ end
 function loadScene(scene, exit)
   currentScene = scene;
   currentScene.load(exit);
+  if (currentScene.getResolution) then
+    sceneW, sceneH = currentScene.getResolution();
+  end
+  sceneCanvas = love.graphics.newCanvas(sceneW, sceneH);
 end
 
 function love.draw()
-  if currentScene then currentScene.draw();
-    local w, h = data.screenW, data.screenH;
-    if (currentScene.getResolution) then
-      w, h = currentScene.getResolution();
-    end
-
-    local canvas = love.graphics.newCanvas(w, h);
-    love.graphics.setCanvas(canvas);
-    
+  if currentScene then
+    sceneCanvas:clear();
+    love.graphics.setCanvas(sceneCanvas);
+    currentScene.draw();
     love.graphics.setCanvas();
 
-    return love.graphics.draw(canvas, 0, 0, 0, data.screenW / w, data.screenH / h);
+    return love.graphics.draw(sceneCanvas, 0, 0, 0, data.screenW / sceneW,  data.screenH / sceneH);
   end
   love.graphics.printf("No scene loaded",0, data.screenH / 2 - 14, data.screenW,"center") -- center your text around x = 200/2 + 100 = 200
 end

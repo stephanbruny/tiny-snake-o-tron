@@ -1,10 +1,13 @@
-local data = require "data"; -- only mutable data
+local data = require "data" -- only mutable global data
+local audio = require "audio"
 
 math.randomseed(os.time())
 
 local scene = {};
 
 local onExit = nil;
+
+local score = 0;
 
 local function createPoint(pointList, x, y)
   table.insert(pointList, {
@@ -21,18 +24,15 @@ local pause = false;
 
 local function drawDot(x, y, color)
   oldR, oldG, oldB = love.graphics.getColor();
-  love.graphics.setColor(color.r, color.g, color.b);
+  love.graphics.setColor(color.r, color.g, color.b, 255);
   love.graphics.arc("fill", x * data.rectSize + data.rectSize / 2, y * data.rectSize + data.rectSize / 2, data.rectSize / 2, 0, math.pi * 2);
-  love.graphics.setColor(oldR, oldG, oldB);
+  love.graphics.setColor(oldR, oldG, oldB, 255);
 end
 
 local function drawPoints(pointList)
-  oldR, oldG, oldB = love.graphics.getColor();
-  love.graphics.setColor(255, 255, 0);
   for k, v in pairs(pointList) do
     drawDot(v.x, v.y, {r = 255, g = 255, b = 0});
   end
-  love.graphics.setColor(oldR, oldG, oldB);
 end
 
 local function updatePoints(pointList, delta) 
@@ -88,6 +88,12 @@ end
 function scene.load(exit)
   makeSnakeHead(data.snake);
   makeEnemySnakeHead(data.enemy);
+  
+  audio.load("game-music", "music/HappyLevel.wav")
+  audio.load("sfx-die", "music/sfx/die.wav")
+  audio.load("sfx-coin", "music/sfx/coin.wav")
+
+  audio.play("game-music", true, data.musicVolume);
   onExit = exit;
 end
 
@@ -104,9 +110,9 @@ end
 
 function drawGameMap(w, h, size)
   r, g, b = love.graphics.getColor();
-  love.graphics.setColor(0, 0, 32);
+  love.graphics.setColor(0, 0, 64, 255);
   love.graphics.rectangle("fill", 0, 0, w * size, h * size);
-  love.graphics.setColor(r, g, b);
+  love.graphics.setColor(r, g, b, 255);
 end
 
 function decreaseUntilZero(var, val)
@@ -122,28 +128,22 @@ function darkenColor(color, value)
 end
 
 function drawSnake(sn, snColor)
-  r, g, b = love.graphics.getColor();
   snr, sng, snb = snColor.r, snColor.g, snColor.b;
-  if (snColor) then
-    love.graphics.setColor(snColor.r, snColor.g, snColor.b)
-  end
 
   for i=1, #sn, 1 do
     if (sn[i].dead) then 
       snColor = {r = 255, g = 0, b = 0}
     end
-    local newColor = darkenColor({r = snColor.r, g = snColor.g, b = snColor.b}, i * 2);
-    love.graphics.setColor(newColor.r,newColor.g,newColor.b);
-  
+    local newColor = darkenColor({r = snColor.r, g = snColor.g, b = snColor.b}, i);
     drawDot(sn[i].x, sn[i].y, newColor);
 
   end
-  love.graphics.setColor(r, g, b);
 end
 
 function scene.draw()
   drawGameMap(data.mapW, data.mapH, data.rectSize);
-  love.graphics.print("Micro Snake", 10, data.mapH * data.rectSize + 10)
+  local w, h = scene.getResolution();
+  love.graphics.printf("Score: " .. score,0, h -  40, w,"left") -- center your text around x = 200/2 + 100 = 200
 
   drawSnake(data.snake, {r = 0, g = 255, b = 0})
   drawSnake(data.enemy, {r = 255, g = 255, b = 255})
@@ -177,6 +177,7 @@ function updateSnake(sn)
     local currentElement = updateSnakeElement(sn[i], sn[i-1]);
     if currentElement.x == sn[1].x and currentElement.y == sn[1].y then
       sn[1].dead = true;
+      audio.play("sfx-die", false, data.sfxVolume);
     end
   end
 end
@@ -185,6 +186,7 @@ function updatePlayer(sn)
   iterateSnakeTail(data.enemy, function(index, e)
     if sn[1].x == e.x and sn[1].y == e.y then
       sn[1].dead = true;
+      audio.play("sfx-die", false, data.sfxVolume);
     end
   end)
   if sn[1].dead then
@@ -210,6 +212,8 @@ function scene.update(delta)
   iteratePoints(data.points, function(index, point) 
     if point.x == data.snake[1].x and point.y == data.snake[1].y then
       addSnakeTail(data.snake);
+      audio.play("sfx-coin", false, data.sfxVolume);
+      score = score + data.coinValue;
       removePoint(data.points, index);
       createPoint(data.points, math.random(0, data.mapW - 1), math.random(0, data.mapH - 1));
     end
@@ -229,8 +233,8 @@ end
 function preventSnakeSuicide(head, sn)
   for i, e in pairs(sn) do
     if i > 1 and head.x + head.nx == e.x and head.y + head.ny == e.y then -- collision ahead?
-      if head.x + head.nx == e.x then head.ny = -head.ny; end
-      if head.y + head.ny == e.y then head.nx = -head.nx; end
+      if head.x + head.nx == e.x then head.nx = 0; end
+      if head.y + head.ny == e.y then head.ny = 0; end
       if head.nx == 0 then
         if head.y + 1 == e.y then head.ny = -1; head.nx = 0; end
         if head.y - 1 == e.y then head.ny = 1; head.nx = 0; end
@@ -290,6 +294,12 @@ function updateEnemy(sn, pointList)
 
   iterateSnakeTail(data.snake, function(index, e)
     if sn[1].x == e.x and sn[1].y == e.y then
+      
+      if not sn[1].dead then 
+        audio.play("sfx-die", false, data.sfxVolume);
+        score = score + data.killEnemyValue
+      end
+
       sn[1].dead = true;
     end
   end)

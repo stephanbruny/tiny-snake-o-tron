@@ -36,8 +36,9 @@ function audio.play(name, loop, volume)
   if (source) then 
     source.source:setLooping(loop);
     source.source:setVolume(volume);
-    source.source:play() 
+    return source.source:play() 
   end
+  print("Could not find sound " .. name);
 end
 
 return audio;

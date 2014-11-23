@@ -16,6 +16,10 @@ return {
   pointDelay = 2,
   points = {},
   enemy = {},
-  screenW = 800,
-  screenH = 600
+  screenW = 1280,
+  screenH = 1024,
+  musicVolume = 0.6,
+  sfxVolume = 0.6,
+  coinValue = 15,
+  killEnemyValue = 1000
 }
