@@ -2,24 +2,18 @@ local data = require "data"
 
 local splashScene = require "splash";
 local gameScene = require "game-scene"
+local titleScene = require "title-scene"
 
 local currentScene = nil;
 
 local sceneW, sceneH = data.screenW, data.screenH;
 local sceneCanvas = love.graphics.newCanvas(sceneW, sceneH);
 
-function loadSplashScene()
-  splashScene.load(function()
-    loadScene(gameScene, exitGameScene);
-  end)
-  currentScene = splashScene;
-end
-
 function love.load()
   love.window.setMode(data.screenW, data.screenH)
   love.graphics.setFont(data.gameFont);
   love.window.setTitle("Snake-O-Tron");
-  loadSplashScene()
+  loadScene(splashScene, exitScene);
 end
 
 function exitGameScene()
@@ -27,7 +21,8 @@ function exitGameScene()
 end
 
 function exitScene(nextScene)
-  if nextScene then loadScene(nextScne) else loadSplashScene() end
+  love.audio.stop();
+  if nextScene then loadScene(nextScene, exitScene) else loadSplashScene() end
 end
 
 function loadScene(scene, exit)
@@ -60,4 +55,8 @@ function love.keypressed(key)
   if (currentScene and currentScene.keypressed) then
     currentScene.keypressed(key);
   end
+end
+
+function love.quit()
+  print ("Tiny Snake-O-Tron (C) 2014 Stephan Bruny")
 end

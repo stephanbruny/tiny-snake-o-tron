@@ -86,6 +86,10 @@ function iterateSnakeTail(sn, callback)
 end
 
 function scene.load(exit)
+  data.snake = {};
+  data.enemy = {};
+  score = 0;
+  
   makeSnakeHead(data.snake);
   makeEnemySnakeHead(data.enemy);
   
@@ -359,7 +363,7 @@ function scene.keypressed(key)
   end
 
   if key == "escape" then
-    onExit();
+    onExit(require "splash");
   end
 end
 
