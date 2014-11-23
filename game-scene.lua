@@ -88,6 +88,7 @@ end
 function scene.load(exit)
   data.snake = {};
   data.enemy = {};
+  data.points = {};
   score = 0;
 
   makeSnakeHead(data.snake);
@@ -153,12 +154,19 @@ end
 function scene.draw()
   drawGameMap(data.mapW, data.mapH, data.rectSize);
   local w, h = scene.getResolution();
-  love.graphics.printf("Score: " .. score,0, h -  40, w,"left") -- center your text around x = 200/2 + 100 = 200
+  love.graphics.printf("Score: " .. score,0, h -  40, w,"center") -- center your text around x = 200/2 + 100 = 200
 
   drawSnake(data.snake, {r = 0, g = 255, b = 0})
   drawSnake(data.enemy, {r = 255, g = 255, b = 255})
-
   drawPoints(data.points);
+
+  if data.snake[1].dead then
+    love.graphics.setColor(0, 0, 0, 128);
+    love.graphics.rectangle("fill", 0, 0, w, h);
+    love.graphics.setColor(255, 214, 0);
+    love.graphics.printf("Your snake died to deadly death. Press ESC to quit game.",0, h/2 -  10, w,"center") -- center your text around x = 200/2 + 100 = 200    
+    love.graphics.setColor(255, 255, 255, 255);
+  end
 
 end
 
